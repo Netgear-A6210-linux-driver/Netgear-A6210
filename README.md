@@ -5,7 +5,7 @@ In particular, the driver supports several USB dongles such as Netgear-A6210,
 ASUS USB-AC55, ASUS USB-N53 and EDUP EP-AC1601.
 
 Linux kernel version up to 5.7.19 has been tested.
-Recommend to use systemd-networkd instead of networkdmanager, if you encounte some bugs, such as can not be used sometimes after reboot.
+Recommend to use systemd-networkd instead of networkdmanager, if you encounter some bugs, such as can not be used sometimes after reboot.
 You can refer to these three articles for configuration to systemd-networkd, [this article @zhihu.com](https://zhuanlan.zhihu.com/p/19770401) & [Systemd-network @archwiki](https://wiki.archlinux.org/index.php/Systemd-networkd#Interface_and_desktop_integration) & [Systemd-resolved @archwiki](https://wiki.archlinux.org/index.php/Systemd-resolved#DNS). 
 
 To build the driver, follow these steps:
