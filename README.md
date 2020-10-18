@@ -7,7 +7,7 @@ ASUS USB-AC55, ASUS USB-N53 and EDUP EP-AC1601.
 Linux kernel version up to 5.7.19 has been tested.
 Recommend to use systemd-networkd instead of NetworkManager, if you encounter some bugs, such as can not be used sometimes after reboot.
 You can refer to these three articles for configuration to systemd-networkd:
-1. [this article @zhihu.com](https://zhuanlan.zhihu.com/p/19770401), it was writed in Chinese.
+1. [this article @zhihu.com](https://zhuanlan.zhihu.com/p/19770401), it was wrote in Chinese.
 2. [Systemd-network @archwiki](https://wiki.archlinux.org/index.php/Systemd-networkd#Interface_and_desktop_integration) 
 3. [Systemd-resolved @archwiki](https://wiki.archlinux.org/index.php/Systemd-resolved#DNS). 
 
