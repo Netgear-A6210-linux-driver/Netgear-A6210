@@ -4,7 +4,7 @@
  *
  * (c) Copyright 2009, Ralink Technology, Inc.
  *
- * All rights reserved. Ralink's source code is an unpublished work and thecnxyang
+ * All rights reserved. Ralink's source code is an unpublished work and the
  * use of a copyright notice does not imply otherwise. This source code
  * contains confidential trade secret material of Ralink Tech. Any attemp
  * or participation in deciphering, decoding, reverse engineering or in any
@@ -114,7 +114,7 @@ static const UINT32 CipherSuites[] = {
 
 /*
 ========================================================================
-Routine Description:cnxyangcnxyang
+Routine Description:
 	Set channel.
 
 Arguments:
