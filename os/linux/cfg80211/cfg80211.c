@@ -4,7 +4,7 @@
  *
  * (c) Copyright 2009, Ralink Technology, Inc.
  *
- * All rights reserved. Ralink's source code is an unpublished work and the
+ * All rights reserved. Ralink's source code is an unpublished work and thecnxyang
  * use of a copyright notice does not imply otherwise. This source code
  * contains confidential trade secret material of Ralink Tech. Any attemp
  * or participation in deciphering, decoding, reverse engineering or in any
@@ -114,7 +114,7 @@ static const UINT32 CipherSuites[] = {
 
 /*
 ========================================================================
-Routine Description:
+Routine Description:cnxyangcnxyang
 	Set channel.
 
 Arguments:
@@ -2500,7 +2500,7 @@ static struct cfg80211_ops CFG80211_Ops = {
 	.set_cqm_rssi_config	= NULL,
 #endif /* LINUX_VERSION_CODE */
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37) && LINUX_VERSION_CODE < KERNEL_VERSION(5,9,0))
 	/* notify driver that a management frame type was registered */
 	.mgmt_frame_register	= CFG80211_OpsMgmtFrameRegister,
 #endif /* LINUX_VERSION_CODE */
