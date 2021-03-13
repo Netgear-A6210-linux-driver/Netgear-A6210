@@ -2500,7 +2500,7 @@ static struct cfg80211_ops CFG80211_Ops = {
 	.set_cqm_rssi_config	= NULL,
 #endif /* LINUX_VERSION_CODE */
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37) && LINUX_VERSION_CODE < KERNEL_VERSION(5,9,0))
 	/* notify driver that a management frame type was registered */
 	.mgmt_frame_register	= CFG80211_OpsMgmtFrameRegister,
 #endif /* LINUX_VERSION_CODE */
