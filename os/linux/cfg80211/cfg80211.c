@@ -1731,15 +1731,26 @@ static int CFG80211_OpsRemainOnChannel(struct wiphy *pWiphy,
 
 static void CFG80211_OpsMgmtFrameRegister(
 	struct wiphy *pWiphy,
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,6,0))
+	struct net_device *dev,
+#endif /*LINUX_VERSION_CODE: < 3.6.0 */
+
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
 	struct wireless_dev *wdev,
-#else
-	struct net_device *dev,
 #endif /* LINUX_VERSION_CODE: 3.6.0 */
-	u16 frame_type, bool reg)
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,8,0))
+	struct mgmt_frame_regs *upd
+#else 
+	u16 frame_type, bool reg
+#endif
+	)
 {
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
 	struct net_device *dev;
+#endif
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,8,0))
+	bool reg = true;
+	u16 frame_type = (upd -> interface_stypes);
 #endif
 	void *pAd;
 
@@ -2500,7 +2511,9 @@ static struct cfg80211_ops CFG80211_Ops = {
 	.set_cqm_rssi_config	= NULL,
 #endif /* LINUX_VERSION_CODE */
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,8,0))
+	.update_mgmt_frame_registrations = CFG80211_OpsMgmtFrameRegister,
+#elif (LINUX_VERSION_CODE > KERNEL_VERSION(2,6,37))
 	/* notify driver that a management frame type was registered */
 	.mgmt_frame_register	= CFG80211_OpsMgmtFrameRegister,
 #endif /* LINUX_VERSION_CODE */
