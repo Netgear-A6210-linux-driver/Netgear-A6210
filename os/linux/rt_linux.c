@@ -670,11 +670,14 @@ RTMP_OS_FD RtmpOSFileOpen(char *pPath, int flag, int mode)
 		flag = O_CREAT;
 	else if (flag == RTMP_FILE_TRUNC)
 		flag = O_TRUNC;
-
+#ifdef set_fs
 	oldfs = get_fs();
 	set_fs(KERNEL_DS);
 	filePtr = filp_open(pPath, flag, 0);
 	set_fs(oldfs);
+#else
+	filePtr = filp_open(pPath, flag, 0);
+#endif
 
 	if (IS_ERR(filePtr)) {
 		DBGPRINT(RT_DEBUG_ERROR,
@@ -702,6 +705,7 @@ void RtmpOSFileSeek(RTMP_OS_FD osfd, int offset)
 int RtmpOSFileRead(RTMP_OS_FD osfd, char *pDataPtr, int readLen)
 {
 	int ret;
+#ifdef set_fs
 	mm_segment_t fs = get_fs();
 
 	set_fs(KERNEL_DS);
@@ -713,6 +717,13 @@ int RtmpOSFileRead(RTMP_OS_FD osfd, char *pDataPtr, int readLen)
 #endif
 
 	set_fs(fs);
+#else
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
+        ret = kernel_read(osfd, pDataPtr, readLen, &osfd->f_pos);
+#else
+        ret = vfs_read(osfd, pDataPtr, readLen, &osfd->f_pos);
+#endif
+#endif
 	return ret;
 }
 
@@ -720,6 +731,7 @@ int RtmpOSFileRead(RTMP_OS_FD osfd, char *pDataPtr, int readLen)
 int RtmpOSFileWrite(RTMP_OS_FD osfd, char *pDataPtr, int writeLen)
 {
 	int ret;
+#ifdef set_fs
 	mm_segment_t oldfs = get_fs();
 
 	set_fs(KERNEL_DS);
@@ -731,6 +743,13 @@ int RtmpOSFileWrite(RTMP_OS_FD osfd, char *pDataPtr, int writeLen)
 #endif
 
 	set_fs(oldfs);
+#else
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
+        ret = kernel_write(osfd, pDataPtr, writeLen, &osfd->f_pos);
+#else
+        ret = vfs_write(osfd, pDataPtr, writeLen, &osfd->f_pos);
+#endif
+#endif
 	return ret;
 }
 
@@ -748,10 +767,12 @@ static inline void __RtmpOSFSInfoChange(OS_FS_INFO * pOSFSInfo, BOOLEAN bSet)
 		pOSFSInfo->fsuid = current_fsuid();
 		pOSFSInfo->fsgid = current_fsgid();
 #endif
+#ifdef set_fs		
 		pOSFSInfo->fs = get_fs();
 		set_fs(KERNEL_DS);
 	} else {
 		set_fs(pOSFSInfo->fs);
+#endif
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,29)
 		current->fsuid = pOSFSInfo->fsuid;
 		current->fsgid = pOSFSInfo->fsgid;
@@ -1611,10 +1632,10 @@ void RtmpDrvAllMacPrint(void *pReserved, UINT32 *pBufMac, UINT32 AddrStart,
 	msg = os_alloc_mem(1024);
 	if (!msg)
 		return;
-
+#ifdef set_fs
 	orig_fs = get_fs();
 	set_fs(KERNEL_DS);
-
+#endif
 	/* open file */
 	file_w = filp_open(fileName, O_WRONLY | O_CREAT, 0);
 	if (IS_ERR(file_w)) {
@@ -1641,7 +1662,9 @@ void RtmpDrvAllMacPrint(void *pReserved, UINT32 *pBufMac, UINT32 AddrStart,
 		}
 		filp_close(file_w, NULL);
 	}
+#ifdef set_fs
 	set_fs(orig_fs);
+#endif
 	os_free_mem(msg);
 }
 
@@ -1659,10 +1682,10 @@ void RtmpDrvAllE2PPrint(void *pReserved, USHORT *pMacContent, UINT32 AddrEnd,
 	msg = os_alloc_mem(1024);
 	if (!msg)
 		return;
-
+#ifdef set_fs
 	orig_fs = get_fs();
 	set_fs(KERNEL_DS);
-
+#endif
 	/* open file */
 	file_w = filp_open(fileName, O_WRONLY | O_CREAT, 0);
 	if (IS_ERR(file_w)) {
@@ -1690,7 +1713,9 @@ void RtmpDrvAllE2PPrint(void *pReserved, USHORT *pMacContent, UINT32 AddrEnd,
 		}
 		filp_close(file_w, NULL);
 	}
+#ifdef set_fs
 	set_fs(orig_fs);
+#endif
 	os_free_mem(msg);
 }
 
@@ -1700,10 +1725,10 @@ void RtmpDrvAllRFPrint(void *pReserved, UCHAR *pBuf, UINT32 BufLen)
 	struct file *file_w;
 	PSTRING fileName = "RFDump.txt";
 	mm_segment_t orig_fs;
-
+#ifdef set_fs
 	orig_fs = get_fs();
 	set_fs(KERNEL_DS);
-
+#endif
 	/* open file */
 	file_w = filp_open(fileName, O_WRONLY | O_CREAT, 0);
 	if (IS_ERR(file_w)) {
@@ -1718,7 +1743,9 @@ void RtmpDrvAllRFPrint(void *pReserved, UCHAR *pBuf, UINT32 BufLen)
 		}
 		filp_close(file_w, NULL);
 	}
+#ifdef set_fs
 	set_fs(orig_fs);
+#endif
 }
 
 
